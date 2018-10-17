@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>营业额录入</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="../../static/images/favicon-20151019091835834.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="../../static/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/dist/css/selectize.bootstrap3.css">
+    <link rel="stylesheet" href="../../static/dist/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <!--扩展 css-->
+    <link rel="stylesheet" href="../../static/css/common.css">
+    <link href="../../static/css/ys-header.css" rel="stylesheet">
+    <link href="../../static/css/zt-header.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/reform/red.css">
+    <link rel="stylesheet" href="../../static/css/search_panel.css">
+    <link rel="stylesheet" href="../../static/css/financial.css">
+    <style type="text/css">
+        #ys-financial-turnover .panel-heading li {
+            position: relative;
+            width: 20%;
+        }
+        #ys-financial-turnover{}
+        #ys-financial-turnover  .panel-heading li{position:relative;width:20%;}
+        #ys-financial-turnover .panel-body>div{padding:20px;}
+        #ys-financial-turnover .panel-body>div table{margin-bottom: 0;}
+        #ys-financial-turnover .panel-body>div table>thead{background-color:#f3f3f3;}
+        #ys-financial-turnover .ys-turnover-panel-edit{}
+        #ys-financial-turnover .ys-content{padding:20px 20px 20px 10px;}
+        #ys-financial-turnover .table-turnover-input{table-layout: fixed;}
+        #ys-financial-turnover .table-turnover-input thead>tr>th{text-align: center;}
+        #ys-financial-turnover .table-turnover-input tbody>tr>td{padding:6px 10px;text-align: right;cursor:pointer;}
+        #ys-financial-turnover .table-turnover-input tbody>tr>td.change{border-left:solid 2px #38b6e6;}
+        #ys-financial-turnover .table-turnover-input tbody>tr>td.error{border-left:solid 2px #e64e4d;position: relative;}
+        #ys-financial-turnover .table-turnover-input tbody>tr>td.error:before{display: block;content:"error";position: absolute;font-size: 14px;height:22px;line-height: 22px;top:4px;left:10px;font-weight: bold;color:#e64e4d;}
+        #ys-financial-turnover .table-turnover-input td>span{display: block;color:#999;font-size: 13px;height:20px;line-height: 20px;}
+        #ys-financial-turnover .table-turnover-input td input{display:none;width: 100%; padding: 0; border: 0; text-align: right; height: 44px; line-height: 44px; font-size: 14px;}
+        #ys-financial-turnover .table-turnover-input .td-input-wrapper{position:relative;width:100%;height:44px;}
+        #ys-financial-turnover .table-turnover-input span.number-format{display:block;position: absolute;width:100%;height:44px;line-height: 44px;color:#333;font-size:13px;top:0;left:0;text-align: right;}
+
+        #ys-financial-turnover .table-turnover-input td.active{background-color:#eaeaea; }
+        #ys-financial-turnover .table-turnover-input td.active input{display: block;border-bottom: solid 2px #ccc; padding-right: 5px;}
+        #ys-financial-turnover .table-turnover-input td.active span.number-format{display: none;}
+
+
+        #ys-financial-turnover .ys-turnover-year{display:none;}
+        #ys-financial-turnover .table-turnover-yearly{table-layout: fixed;}
+        #ys-financial-turnover .table-turnover-yearly tbody>tr>td{padding:6px 10px;text-align: right;}
+        #ys-financial-turnover .table-turnover-yearly td>span{display: block;color:#333;font-size: 13px;height:20px;line-height: 20px;}
+        #ys-financial-turnover .table-turnover-yearly .td-monthly-count{position:relative;width:100%;height:44px;}
+        #ys-financial-turnover .table-turnover-yearly .td-monthly-count span{display:block;width:100%;height:44px;line-height: 44px;color:#757575;font-size:13px;text-align: right;}
+
+        #ys-financial-turnover .panel-group .panel-default> .panel-heading{ background-color: #f3f3f3; color:#333; }
+        #ys-financial-turnover .panel-group .panel-default:nth-child(even) > .panel-heading { background-color: #fff; color:#333; }
+        #ys-financial-turnover .panel-group .panel + .panel.ys-collapse-in>.panel-heading { background-color: #828d93; color: #fff; }
+
+        #ys-financial-turnover .turnover-item-sum{display: inline-block;height:34px;line-height: 34px;}
+
+        #ys-financial-turnover .ys-turnover-list{}
+        #ys-financial-turnover .ys-turnover-list .btn-turuover-monthly, #ys-financial-turnover .ys-turnover-list .btn-turnover-yearly{min-width: 80px;}
+
+        #ys-financial-turnover .ys-turnover-list .btn-turuover-monthly.active, #ys-financial-turnover .ys-turnover-list .btn-turnover-yearly.active{background-color:#818c92;color:#fff; }
+    </style>
+    <!-- JavaScript -->
+    <!-- 第三方js -->
+
+
+    <script src="../../static/js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="chromeframe">您的浏览器太旧了，请更新最新浏览器，以获得最佳效果.</p>
+<![endif]-->
+
+<!-- Preloader -->
+<div id="preloader">
+    <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
+</div>
+
+<!-- Add your site or application content here -->
+<main class="bs-masthead ys-sys ys-financial-fee ys-page" id="ys-financial-turnover" role="main">
+
+    <!-- 主面板 -->
+    <div class="ys-main-panel">
+
+        <div class="ys-content-panel clearfix">
+
+
+
+            <div class="container ys-content">
+
+                <div class="ys-fee-title clearfix">
+                    <!-- Single button -->
+                    <div class="pull-left btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            所有商业公司<span class="span-more"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"> 泉州商业公司</a></li>
+                            <li><a href="#"> 泉州商业公司</a></li>
+                            <li><a href="#"> 泉州商业公司</a></li>
+                            <li><a href="#"> 泉州商业公司</a></li>
+                        </ul>
+
+                    </div><!--end col-md-3 btn-group-->
+                    <div class="col-xs-2 pull-left" style="padding:0;">
+                        <div class="input-group date ys-datepicker" id="datepicker" style="width:180px;">
+                            <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="ys-date-pre"  data-date="pre"><em class="glyphicon glyphicon-arrow-left"></em></button>
+                            </span>
+                            <input class="form-control" size="16" type="text" value="" data-provide="datepicker">
+                            <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="ys-date-next"  data-date="next"><em class="glyphicon glyphicon-arrow-right"></em></button>
+                            </span>
+                            <!--   <span class="add-on"><i class="icon-th"></i></span>-->
+                        </div>
+                    </div>
+
+
+                    <div class="ys-search-wrapper pull-left" >
+                        <div class="input-group  pull-left " style="width:282px;">
+                            <!--      <input type="text" class="form-control" placeholder="输入项目名称">-->
+                            <input type="text" class="form-control" id="search-form" placeholder="租户\铺位号">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default" type="button"><em class="glyphicon glyphicon-search btn-search"></em></button>
+                            </span>
+                        </div>
+                    </div>
+                </div><!--end row-->
+
+                <div class="ys-block" style="margin-top:20px;">
+                    <div class="row">
+                        <div class="col-md-12 ys-turnover-list">
+
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="ys-panel-thead">
+                                        <ul class="clearfix">
+                                            <li>品牌</li><!--li-->
+                                            <li>合同编号</li>
+                                            <li>合同日期</li>
+                                            <li>铺位信息</li>
+                                            <li class="text-right">营业额合计(元)</li>
+                                        </ul>
+                                    </div><!--end panel-heading-->
+
+                                </div><!--panel-->
+                                <div class="panel panel-default" >
+                                    <div class="panel-heading" role="tab" id="heading1">
+
+                                        <div data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" aria-controls="collapse1" >
+                                            <ul class="clearfix">
+                                                <li>优衣库</li><!--li-->
+                                                <li>YW-XXXX-20161011</li>
+                                                <li>2015-07-09~2017-07-08</li>
+                                                <li>2F-A03, A04, A05 / 203.37m<sup>2</sup></li>
+                                                <li class="text-right turnover-all">2,307,365.24</li>
+                                            </ul>
+
+                                        </div>
+
+                                    </div><!--end panel-heading-->
+                                    <div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-id="YW-XXXX-20161011">
+
+                                        <div class="clearfix" style="padding-bottom:15px;">
+                                            <div class="panel-body-title col-xs-8 pull-left">
+                                                <div class="btn-group pull-left">
+                                                    <button type="button" class="btn btn-default btn-turnover-daterange btn-turuover-monthly active" data-range="month">按月</button>
+                                                    <button type="button" class="btn btn-default btn-turnover-daterange btn-turnover-yearly" data-range="year">按年</button>
+                                                </div>
+
+                                                <div class="col-xs-3 pull-left" style="padding:0;">
+                                                    <div class="input-group date ys-datepicker">
+                                                        <span class="input-group-btn">
+                                                                <button class="btn btn-default ys-date-pre" type="button"  data-date="pre"><em class="glyphicon glyphicon-arrow-left"></em></button>
+                                                        </span>
+                                                        <input class="form-control" size="16" type="text" value="" data-provide="datepicker">
+                                                        <span class="input-group-btn">
+                                                                <button class="btn btn-default ys-date-next" type="button"  data-date="next"><em class="glyphicon glyphicon-arrow-right"></em></button>
+                                                        </span>
+                                                        <!--   <span class="add-on"><i class="icon-th"></i></span>-->
+                                                    </div><!--ys-datepicker-->
+                                                </div><!--ys-datepicker wrapper-->
+                                                <div class="col-xs-4 pull-left">
+                                                    <span class="turnover-item-sum">合计:<i>2,307,365.24</i>元</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="pull-right" role="group" aria-label="" style="float:left;margin-right:12px;font-size:14px;">
+                                                <button type="button" class="btn btn-default btn-ys-default btn-ys-red ys-btn-save">保存</button>
+                                                <button type="button" class="btn btn-default btn-ys-default ys-btn-close">关闭</button>
+                                              <!--  <button type="button" class="btn btn-default btn-ys-default" data-toggle="collapse" data-parent="#accordion" href="#collapse1">收起</button>-->
+                                            </div>
+
+                                        </div><!-- row-->
+
+                                        <div class="panel-body">
+                                            <div class="ys-turnover-panel-edit">
+                                                <form class="form-horizontal" name="form_turnover_item">
+                                                      <table class="table table-bordered table-turnover-input">
+                                                          <thead>
+                                                               <tr>
+                                                                   <th>日</th>
+                                                                   <th>一</th>
+                                                                   <th>二</th>
+                                                                   <th>三</th>
+                                                                   <th>四</th>
+                                                                   <th>五</th>
+                                                                   <th>六</th>
+                                                               </tr>
+                                                          </thead>
+                                                          <tbody>
+
+                                                          </tbody>
+                                                      </table>
+
+                                                </form><!--end form-->
+                                            </div><!--end ys-fee-panel-edit-->
+
+                                            <div class="col-xs-6 ys-turnover-year">
+                                                  <table class="table table-bordered table-turnover-yearly">
+                                                      <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <span>1月</span>
+                                                                <div class="td-monthly-count"  data-month="01">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>2月</span>
+                                                                <div class="td-monthly-count"  data-month="02">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>3月</span>
+                                                                <div class="td-monthly-count"  data-month="03">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                <span>4月</span>
+                                                                <div class="td-monthly-count"  data-month="04">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>5月</span>
+                                                                <div class="td-monthly-count" data-month="05">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>6月</span>
+                                                                <div class="td-monthly-count" data-month="06">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                <span>7月</span>
+                                                                <div class="td-monthly-count" data-month="07">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>8月</span>
+                                                                <div class="td-monthly-count" data-month="08">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>9月</span>
+                                                                <div class="td-monthly-count" data-month="09">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                <span>10月</span>
+                                                                <div class="td-monthly-count" data-month="10">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>11月</span>
+                                                                <div class="td-monthly-count" data-month="11">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>12月</span>
+                                                                <div class="td-monthly-count" data-month="12">
+                                                                    <span>6,336.00</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                      </tbody>
+                                                  </table>
+
+                                             </div><!--ys-turnover-year-->
+                                        </div> <!--end panel-body-->
+                                        <!-- <div class="panel-footer">Footer</div> -->
+                                    </div>
+                                </div><!--panel-->
+
+                                <div class="panel panel-default" >
+                                    <div class="panel-heading" role="tab" id="heading2">
+
+                                        <div data-toggle="collapse" data-parent="#accordion" href="#collapse2"  >
+                                            <ul class="clearfix">
+                                                <li>优衣库</li><!--li-->
+                                                <li>YW-XXXX-20161011</li>
+                                                <li>2015-07-09~2017-07-08</li>
+                                                <li>2F-A03, A04, A05 / 203.37m<sup>2</sup></li>
+                                                <li class="text-right turnover-all">2,307,365.24</li>
+                                            </ul>
+
+                                        </div>
+
+                                    </div><!--end panel-heading-->
+                                    <div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-id="YW-XXXX-20161011">
+
+                                        <div class="clearfix" style="padding-bottom:15px;">
+                                            <div class="panel-body-title col-xs-8 pull-left">
+                                                <div class="btn-group pull-left">
+                                                    <button type="button" class="btn btn-default btn-turnover-daterange btn-turuover-monthly active" data-range="month">按月</button>
+                                                    <button type="button" class="btn btn-default btn-turnover-daterange btn-turnover-yearly" data-range="year">按年</button>
+                                                </div>
+
+                                                <div class="col-xs-3 pull-left" style="padding:0;">
+                                                    <div class="input-group date ys-datepicker">
+                                                        <span class="input-group-btn">
+                                                                <button class="btn btn-default ys-date-pre" type="button"  data-date="pre"><em class="glyphicon glyphicon-arrow-left"></em></button>
+                                                        </span>
+                                                        <input class="form-control" size="16" type="text" value="" data-provide="datepicker">
+                                                        <span class="input-group-btn">
+                                                                <button class="btn btn-default ys-date-next" type="button"  data-date="next"><em class="glyphicon glyphicon-arrow-right"></em></button>
+                                                        </span>
+                                                        <!--   <span class="add-on"><i class="icon-th"></i></span>-->
+                                                    </div><!--ys-datepicker-->
+                                                </div><!--ys-datepicker wrapper-->
+                                                <div class="col-xs-4 pull-left">
+                                                    <span class="turnover-item-sum">合计:<i>2,307,365.24</i>元</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="pull-right" role="group" aria-label="" style="float:left;margin-right:12px;font-size:14px;">
+                                                <button type="button" class="btn btn-default btn-ys-default btn-ys-red ys-btn-save">保存</button>
+                                                <button type="button" class="btn btn-default btn-ys-default ys-btn-close">关闭</button>
+                                                <!--  <button type="button" class="btn btn-default btn-ys-default" data-toggle="collapse" data-parent="#accordion" href="#collapse1">收起</button>-->
+                                            </div>
+
+                                        </div><!-- row-->
+
+                                        <div class="panel-body">
+                                            <div class="ys-turnover-panel-edit">
+                                                <form class="form-horizontal" name="form_turnover_item">
+                                                    <table class="table table-bordered table-turnover-input">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>日</th>
+                                                            <th>一</th>
+                                                            <th>二</th>
+                                                            <th>三</th>
+                                                            <th>四</th>
+                                                            <th>五</th>
+                                                            <th>六</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </form><!--end form-->
+                                            </div><!--end ys-fee-panel-edit-->
+
+                                            <div class="col-xs-6 ys-turnover-year">
+                                                <table class="table table-bordered table-turnover-yearly">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <span>1月</span>
+                                                            <div class="td-monthly-count"  data-month="01">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>2月</span>
+                                                            <div class="td-monthly-count"  data-month="02">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>3月</span>
+                                                            <div class="td-monthly-count"  data-month="03">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <span>4月</span>
+                                                            <div class="td-monthly-count"  data-month="04">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>5月</span>
+                                                            <div class="td-monthly-count" data-month="05">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>6月</span>
+                                                            <div class="td-monthly-count" data-month="06">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <span>7月</span>
+                                                            <div class="td-monthly-count" data-month="07">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>8月</span>
+                                                            <div class="td-monthly-count" data-month="08">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>9月</span>
+                                                            <div class="td-monthly-count" data-month="09">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <span>10月</span>
+                                                            <div class="td-monthly-count" data-month="10">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>11月</span>
+                                                            <div class="td-monthly-count" data-month="11">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>12月</span>
+                                                            <div class="td-monthly-count" data-month="12">
+                                                                <span>6,336.00</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div><!--ys-turnover-year-->
+                                        </div> <!--end panel-body-->
+                                        <!-- <div class="panel-footer">Footer</div> -->
+                                    </div>
+                                </div><!--panel-->
+
+                            </div><!--panel-group-->
+
+                        </div> <!--end col-md-12-->
+
+
+                    </div><!--end row-->
+                    <div class="clearfix">
+                        <div class="btn-wrapper pull-right">
+                            <span style="margin-right:10px;"><em id="page-index-bottom">共<i>122</i>条记录，当前第<i>1</i>/<i>7</i>页</em></span>
+                            <div class="btn-group" role="group" aria-label="">
+                                <button type="button" class="btn btn-default btn-disable" id="btn-pre-bottom">&lt;</button>
+                                <button type="button" class="btn btn-default" id="btn-next-bottom">&gt;</button>
+                                <input type="text" value="1" class="ys-page-num-input"/>
+                            </div>
+
+                            <button type="button" class="btn btn-default btn-ys-default btn-ys-red" id="btn-save">确定</button>
+                        </div>
+                    </div><!--end div clearfix-->
+
+
+                </div><!--end col-md-8-->
+            </div><!--end row ys-content-->
+        </div><!--end content-panel-->
+
+
+
+    </div><!--end main-panel-->
+
+    <!-- 遮罩 -->
+    <div class="ys-shadow"></div>
+</div><!--end main panel-->
+</main><!--end main-->
+
+<div class="loading">
+    <span class="spin"><img src="./static/images/ajax-loader.gif"/></span>
+</div>
+
+<!-- Script 导入部分 -->
+<script src="../../static/js/vendor/jquery-1.11.3.min.js"></script>
+<script src="../../static/dist/js/bootstrap.min.js"></script>
+<script src="../../static/js/vendor/date-time/bootstrap-datetimepicker.js"></script>
+<script src="../../static/dist/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<!--<script src="static/dist/js/echarts-all.js"></script>-->
+<script src="../../static/js/plugins.js"></script>
+<script src="../../static/js/standalone/selectize.js"></script>
+<script src="../../static/js/reform.js"></script>
+<script src="../../static/js/common.js"></script>
+<script src="../../static/js/search_panel.js"></script>
+
+<script src="../../static/js/finacial_turnover_edit.js"></script>
+<script>
+$(document).ready(function(){
+    turnover.init();
+   });
+</script>
+</body>
+</html>
